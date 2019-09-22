@@ -3,6 +3,7 @@ package com.example.logintest;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.StrictMode;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -12,14 +13,12 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
-
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -29,6 +28,8 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
     private EditText edit_username,edit_password;
     private Button btn_submit;
+    private LinearLayout linearLayout;
+    private Dialog dialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,10 +39,20 @@ public class MainActivity extends AppCompatActivity {
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);
         }
+        dialog = new Dialog(MainActivity.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+        dialog.setContentView(R.layout.dialog_forgot_password);
+
+        int width = (int)(getResources().getDisplayMetrics().widthPixels*0.95);
+        int height = (int)(getResources().getDisplayMetrics().heightPixels*0.55);
+        dialog.getWindow().setLayout(width,height);
+
+        linearLayout = findViewById(R.id.view_id);
         edit_password = findViewById(R.id.edit_password);
         edit_username = findViewById(R.id.edit_username);
         btn_submit = findViewById(R.id.btn_send);
-        
+
         PreferenceUtils utils = new PreferenceUtils();
         if (utils.getUsername(this) != null ){
             Intent intent = new Intent(MainActivity.this, MainUser.class);
@@ -94,28 +105,19 @@ public class MainActivity extends AppCompatActivity {
             else{
                 Toast.makeText(getApplicationContext(), obj.getString("message"), Toast.LENGTH_SHORT).show();
             }
-        } catch (JSONException e) {
-            e.printStackTrace();
         }
-
-
-
+        catch (JSONException e) { e.printStackTrace(); }
     }
 
    public void forgotpass(View v){
-       final Dialog dialog = new Dialog(MainActivity.this);
-       dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-       dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-       dialog.setContentView(R.layout.dialog_forgot_password);
-
-       int width = (int)(getResources().getDisplayMetrics().widthPixels*0.95);
-       int height = (int)(getResources().getDisplayMetrics().heightPixels*0.55);
-       dialog.getWindow().setLayout(width,height);
-
        final Spinner spn = dialog.findViewById(R.id.spn_forgot);
        final EditText edit_forgot = dialog.findViewById(R.id.edit_dialog_forgot_text);
        final Button btn_forgot = dialog.findViewById(R.id.btn_forgot_send);
-       final TextView txtresult = dialog.findViewById(R.id.txtResult);
+       final EditText edit_dialog_username = dialog.findViewById(R.id.edit_dialog_forgot_username);
+
+       edit_forgot.setText(null);
+       edit_dialog_username.setText(null);
+
        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.spn_forgot, android.R.layout.simple_spinner_item);
        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
        spn.setAdapter(adapter);
@@ -123,8 +125,14 @@ public class MainActivity extends AppCompatActivity {
        spn.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
            @Override
            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-               if(spn.getSelectedItem().equals("นักเรียน")){Toast.makeText(MainActivity.this, "กรุณากรอกรหัสนักเรียน", Toast.LENGTH_SHORT).show();}
-               else{Toast.makeText(MainActivity.this, "กรุณากรอกเลขบัตรประชาชน", Toast.LENGTH_SHORT).show();}
+               if(spn.getSelectedItem().equals("นักเรียน")){
+                   edit_forgot.setHint("รหัสนักเรียน");
+                   Toast.makeText(MainActivity.this, "กรุณากรอกรหัสนักเรียน", Toast.LENGTH_SHORT).show();
+               }
+               else{
+                   edit_forgot.setHint("เลขบัตรประชาชน");
+                   Toast.makeText(MainActivity.this, "กรุณากรอกเลขบัตรประชาชน", Toast.LENGTH_SHORT).show();
+               }
            }
 
            @Override
@@ -134,34 +142,41 @@ public class MainActivity extends AppCompatActivity {
        btn_forgot.setOnClickListener(new View.OnClickListener() {
            @Override
            public void onClick(View v) {
-                if(edit_forgot.getText().toString().trim().isEmpty()){ Toast.makeText(MainActivity.this, "กรุณากรอก", Toast.LENGTH_SHORT).show(); }
+                if(edit_forgot.getText().toString().trim().isEmpty()){
+                    Toast.makeText(MainActivity.this, "กรุณากรอก", Toast.LENGTH_SHORT).show();
+                }
                 else{
-                    send_forgot(edit_forgot.getText().toString().trim(),spn.getSelectedItem().toString());
+                    send_forgot(edit_forgot.getText().toString().trim(),spn.getSelectedItem().toString(),edit_dialog_username.getText().toString().trim());
                 }
 
            }
        });
        dialog.show();
     }
-    public void send_forgot(String forgot,String state){
+    public void send_forgot(String forgot,String state,String username){
         String url = "http://18.140.49.199/Donkha/Service_app/forgot_password";
 
         List<NameValuePair> params = new ArrayList<NameValuePair>();
         params.add(new BasicNameValuePair("Forgot", forgot));
         params.add(new BasicNameValuePair("State", state));
-        try {
-            JSONArray jsonarray = new JSONArray(WebSevConnect.getHttpPost(url,params,MainActivity.this));
-            for(int i=0; i < jsonarray.length(); i++) {
-                JSONObject jsonobject = jsonarray.getJSONObject(i);
-                if(jsonobject.getString("password").equals("")){
-                    Toast.makeText(this, "ล้มเหลว", Toast.LENGTH_SHORT).show();
-                }
-                else{
-                    Toast.makeText(this, jsonobject.getString("password"), Toast.LENGTH_SHORT).show();
-                }
+        params.add(new BasicNameValuePair("Username", username));
 
+        String response = WebSevConnect.getHttpPost(url,params,MainActivity.this);
+        try {
+            JSONObject obj = new JSONObject(response);
+            if(!obj.getBoolean("error")){
+
+                //getting the user from the response
+                JSONObject forgotJson = obj.getJSONObject("forgot");
+
+                Snackbar.make(linearLayout, "รหัสผ่าน "+forgotJson.getString("password"), Snackbar.LENGTH_LONG).show();
+                dialog.dismiss();
             }
-        } catch (JSONException e) { e.printStackTrace(); }
+            else{
+                Toast.makeText(getApplicationContext(), obj.getString("message"), Toast.LENGTH_SHORT).show();
+            }
+        }
+        catch (JSONException e) { e.printStackTrace(); }
     }
 
 

@@ -5,13 +5,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    android:id="@+id/view_id">
 
     <TextView
         android:id="@+id/textView2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="50dp" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="129dp"
+        app:srcCompat="@drawable/donkha" />
 
     <TextView
         android:id="@+id/textView"
@@ -21,7 +28,8 @@
         android:textAlignment="center"
         android:textColor="#000000"
         android:textSize="20dp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:layout_marginTop="10dp"/>
 
     <EditText
         android:id="@+id/edit_username"
@@ -29,7 +37,10 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:hint="ชื่อผู้ใช้"
-        android:inputType="textPersonName" />
+
+        android:inputType="textPersonName"
+        android:layout_marginLeft="80dp"
+        android:layout_marginRight="80dp"/>
 
     <EditText
         android:id="@+id/edit_password"
@@ -37,13 +48,17 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:hint="รหัสผ่าน"
-        android:inputType="textPersonName" />
+        android:inputType="textPersonName"
+        android:layout_marginLeft="80dp"
+        android:layout_marginRight="80dp"/>
 
     <Button
         android:id="@+id/btn_send"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="เข้าสู่ระบบ" />
+        android:text="เข้าสู่ระบบ"
+        android:layout_marginLeft="80dp"
+        android:layout_marginRight="80dp"/>
 
     <TextView
         android:id="@+id/textView6"
