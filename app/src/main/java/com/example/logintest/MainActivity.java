@@ -145,10 +145,15 @@ public class MainActivity extends AppCompatActivity {
                 if(edit_forgot.getText().toString().trim().isEmpty()){
                     Toast.makeText(MainActivity.this, "กรุณากรอก", Toast.LENGTH_SHORT).show();
                 }
-                else{
+                if(edit_dialog_username.getText().toString().trim().isEmpty()){
+                    Toast.makeText(MainActivity.this, "กรุณากรอกชื่อผู้ใช้", Toast.LENGTH_SHORT).show();
+                }
+                if(!edit_forgot.getText().toString().trim().isEmpty() ||
+                        !edit_dialog_username.getText().toString().trim().isEmpty() ||
+                        !spn.getSelectedItem().toString().isEmpty())
+                {
                     send_forgot(edit_forgot.getText().toString().trim(),spn.getSelectedItem().toString(),edit_dialog_username.getText().toString().trim());
                 }
-
            }
        });
        dialog.show();

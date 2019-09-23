@@ -6,7 +6,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".MainActivity"
-    android:id="@+id/view_id">
+    android:id="@+id/view_id"
+    android:background="@color/base_color">
 
     <TextView
         android:id="@+id/textView2"
@@ -55,10 +56,11 @@
     <Button
         android:id="@+id/btn_send"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="เข้าสู่ระบบ"
+        android:layout_height="66dp"
         android:layout_marginLeft="80dp"
-        android:layout_marginRight="80dp"/>
+        android:layout_marginRight="80dp"
+        android:background="@drawable/test"
+        android:text="เข้าสู่ระบบ" />
 
     <TextView
         android:id="@+id/textView6"
