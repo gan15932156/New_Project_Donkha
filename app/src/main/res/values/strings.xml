@@ -6,4 +6,11 @@
         <item>นักเรียน</item>
         <item>บุคลากร</item>
     </string-array>
+
+    <string-array name="spn_action_statement">
+        <item>ทั้งหมด</item>
+        <item>ฝาก</item>
+        <item>ถอน</item>
+        <item>โอน</item>
+    </string-array>
 </resources>

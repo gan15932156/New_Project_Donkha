@@ -1,4 +1,4 @@
-package com.example.logintest;
+package com.example.logintest.Activities;
 
 import android.app.Dialog;
 import android.content.Intent;
@@ -18,8 +18,13 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.example.logintest.Database.WebSevConnect;
+import com.example.logintest.GetSetClass.PreferenceUtils;
+import com.example.logintest.R;
+
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -56,8 +61,10 @@ public class MainActivity extends AppCompatActivity {
 
         PreferenceUtils utils = new PreferenceUtils();
         if (utils.getUsername(this) != null ){
-            Intent intent = new Intent(MainActivity.this, MainUser.class);
+            Intent intent = new Intent(this,MainUser.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_TASK_ON_HOME);
             startActivity(intent);
+            this.finish();
         }
         btn_submit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,6 +107,7 @@ public class MainActivity extends AppCompatActivity {
 
                 PreferenceUtils.saveUsername(userJson.getString("username"),this);
                 PreferenceUtils.savePassword(userJson.getString("password"),this);
+                PreferenceUtils.saveMember_id(userJson.getString("id"),this);
                 startActivity(new Intent(MainActivity.this,MainUser.class));
                 finish();
             }

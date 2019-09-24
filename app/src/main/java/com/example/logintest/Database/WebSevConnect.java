@@ -1,4 +1,4 @@
-package com.example.logintest;
+package com.example.logintest.Database;
 
 import java.io.BufferedReader;
 import java.io.IOException;

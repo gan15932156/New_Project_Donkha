@@ -1,4 +1,4 @@
-package com.example.logintest;
+package com.example.logintest.Fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,6 +10,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
+
+import com.example.logintest.Activities.MainActivity;
+import com.example.logintest.Activities.MainUser;
+import com.example.logintest.GetSetClass.PreferenceUtils;
+import com.example.logintest.R;
 
 public class MeFragment extends Fragment {
     private Button btn_logout;
@@ -32,6 +37,7 @@ public class MeFragment extends Fragment {
             public void onClick(View v) {
                 PreferenceUtils.savePassword(null, getContext());
                 PreferenceUtils.saveUsername(null, getContext());
+                PreferenceUtils.saveMember_id(null, getContext());
                 Intent intent = new Intent(getContext(), MainActivity.class);
                 startActivity(intent);
             }

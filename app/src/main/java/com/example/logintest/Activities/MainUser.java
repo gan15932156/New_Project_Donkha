@@ -1,4 +1,4 @@
-package com.example.logintest;
+package com.example.logintest.Activities;
 
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -7,6 +7,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.Toast;
+
+import com.example.logintest.Fragment.HomeFragment;
+import com.example.logintest.Fragment.MeFragment;
+import com.example.logintest.Fragment.StatementFragment;
+import com.example.logintest.GetSetClass.PreferenceUtils;
+import com.example.logintest.R;
 
 public class MainUser extends AppCompatActivity {
     @Override
@@ -18,7 +24,7 @@ public class MainUser extends AppCompatActivity {
         bottomNavigationView.setOnNavigationItemSelectedListener(navListener);
 
         Fragment fragment = new HomeFragment();
-        Toast.makeText(this, "Hello "+PreferenceUtils.getUsername(this), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Hello "+ PreferenceUtils.getUsername(this), Toast.LENGTH_SHORT).show();
 
         getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout,fragment).commit();
 

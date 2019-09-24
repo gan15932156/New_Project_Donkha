@@ -1,4 +1,4 @@
-package com.example.logintest;
+package com.example.logintest.Fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,18 +8,25 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
-public class StatementFragment extends Fragment {
+import com.example.logintest.Activities.MainUser;
+import com.example.logintest.GetSetClass.PreferenceUtils;
+import com.example.logintest.R;
+
+public class HomeFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        PreferenceUtils utils = new PreferenceUtils();
+        View view = inflater.inflate(R.layout.fregment_home, container, false);
 
-        View view = inflater.inflate(R.layout.fregment_statement, container, false);
-        if (utils.getUsername(getContext()) == null){
+        PreferenceUtils utils = new PreferenceUtils();
+        if (utils.getUsername(getContext()) == null ){
             Intent intent = new Intent(getContext(), MainUser.class);
             startActivity(intent);
         }
+
+        Toast.makeText(getContext(), "Homeeeee", Toast.LENGTH_SHORT).show();
         return view;
     }
 }
