@@ -63,6 +63,7 @@
         android:layout_marginRight="80dp"
         android:text="เข้าสู่ระบบ"
         android:textSize="20dp"
+        android:textStyle="bold"
         android:layout_gravity="center_horizontal"
         android:background="@color/button"/>
 

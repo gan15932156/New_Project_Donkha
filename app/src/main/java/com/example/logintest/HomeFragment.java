@@ -1,5 +1,6 @@
 package com.example.logintest;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -14,6 +15,13 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fregment_home, container, false);
+
+        PreferenceUtils utils = new PreferenceUtils();
+        if (utils.getUsername(getContext()) == null ){
+            Intent intent = new Intent(getContext(), MainUser.class);
+            startActivity(intent);
+        }
+
         Toast.makeText(getContext(), "Homeeeee", Toast.LENGTH_SHORT).show();
         return view;
     }

@@ -2,6 +2,7 @@ package com.example.logintest;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.StrictMode;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -170,11 +171,13 @@ public class MainActivity extends AppCompatActivity {
         try {
             JSONObject obj = new JSONObject(response);
             if(!obj.getBoolean("error")){
-
-                //getting the user from the response
                 JSONObject forgotJson = obj.getJSONObject("forgot");
 
-                Snackbar.make(linearLayout, "รหัสผ่าน "+forgotJson.getString("password"), Snackbar.LENGTH_LONG).show();
+                Snackbar snackbar =  Snackbar.make(linearLayout, "รหัสผ่าน "+forgotJson.getString("password"), Snackbar.LENGTH_LONG);
+
+                View snackbarview = snackbar.getView();
+                snackbarview.setBackgroundColor(Color.parseColor("#36a1ff"));
+                snackbar.show();
                 dialog.dismiss();
             }
             else{

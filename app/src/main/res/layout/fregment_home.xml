@@ -11,6 +11,5 @@
         android:layout_weight="1"
         android:textSize="50dp"
         android:text="HOME"
-        android:textAlignment="center"
-        />
+        android:textAlignment="center"/>
 </LinearLayout>
