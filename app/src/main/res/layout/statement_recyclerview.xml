@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:background="@color/base_color">
+    android:background="@color/powder_blue"
+    >
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -29,7 +30,8 @@
             android:layout_weight="1"
             android:text="TextView"
             android:textColor="@color/black"
-            android:textSize="16dp"/>
+            android:textSize="16dp"
+            android:textAlignment="textEnd"/>
     </LinearLayout>
 
     <TextView
@@ -39,7 +41,14 @@
         android:text="TextView"
         android:layout_marginRight="10dp"
         android:layout_marginLeft="10dp"
-        android:layout_marginBottom="15dp"
+        android:layout_marginBottom="10dp"
         android:textColor="@color/black"
         android:textSize="16dp"/>
+    <View
+        android:layout_width="300dp"
+        android:layout_height="1dp"
+        android:layout_gravity="center"
+        android:layout_marginBottom="5dp"
+        android:background="@color/design_default_color_primary" />
+
 </LinearLayout>

@@ -1,6 +1,9 @@
 package com.example.logintest;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,7 +13,13 @@ import android.widget.TextView;
 
 import com.example.logintest.GetSetClass.Statement;
 
+import java.text.DateFormat;
+import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 public class StatementRecyclerAdapter extends RecyclerView.Adapter<StatementRecyclerAdapter.StatementViewHoler> {
     private Context mContext;
@@ -28,17 +37,32 @@ public class StatementRecyclerAdapter extends RecyclerView.Adapter<StatementRecy
         return new StatementViewHoler(v);
     }
 
+    @SuppressLint("ResourceAsColor")
     @Override
     public void onBindViewHolder(@NonNull StatementViewHoler statementViewHoler, int i) {
         Statement st = mStatementArrayList.get(i);
 
-        String action = st.getAction();
+        String action ;
         String date = st.getRecord_date();
         String time = st.getRecord_time();
-        String money = String.valueOf(st.getTrans_money());
+        String money;
+        if(st.getAction().equals("deposit")){
+            action = "ฝาก";
+            money = customFormat("++###,###.###",st.getTrans_money());
+            statementViewHoler.txt_money.setTextColor(Color.parseColor("#00b806"));
+        }else if(st.getAction().equals("withdraw")){
+            action = "ถอน";
+            money = customFormat("--###,###.###",st.getTrans_money());
+            statementViewHoler.txt_money.setTextColor(Color.RED);
+        }
+        else{
+            action = "โอน";
+            money = customFormat("++###,###.###",st.getTrans_money());
+            statementViewHoler.txt_money.setTextColor(Color.parseColor("#00b806"));
+        }
 
         statementViewHoler.txt_action.setText(action);
-        statementViewHoler.txt_date.setText(date+" "+time);
+        statementViewHoler.txt_date.setText(dateThai(date)+" เวลา "+time);
         statementViewHoler.txt_money.setText(money);
 
     }
@@ -59,4 +83,35 @@ public class StatementRecyclerAdapter extends RecyclerView.Adapter<StatementRecy
 
         }
     }
+
+    public static String dateThai(String strDate)
+    {
+        String Months[] = {
+                "ม.ค", "ก.พ", "มี.ค", "เม.ย",
+                "พ.ค", "มิ.ย", "ก.ค", "ส.ค",
+                "ก.ย", "ต.ค", "พ.ย", "ธ.ค"};
+
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+
+        int year=0,month=0,day=0;
+        try {
+            Date date = df.parse(strDate);
+            Calendar c = Calendar.getInstance();
+            c.setTime(date);
+
+            year = c.get(Calendar.YEAR);
+            month = c.get(Calendar.MONTH);
+            day = c.get(Calendar.DATE);
+
+        }
+        catch (ParseException e) { e.printStackTrace(); }
+        return String.format("%s %s %s", day,Months[month],year+543);
+    }
+
+    public String customFormat(String pattern, double value ) {
+        DecimalFormat myFormatter = new DecimalFormat(pattern);
+        String output = myFormatter.format(value);
+        return output;
+    }
+
 }
