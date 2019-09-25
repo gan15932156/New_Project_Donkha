@@ -24,7 +24,6 @@ import com.example.logintest.R;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -108,7 +107,9 @@ public class MainActivity extends AppCompatActivity {
                 PreferenceUtils.saveUsername(userJson.getString("username"),this);
                 PreferenceUtils.savePassword(userJson.getString("password"),this);
                 PreferenceUtils.saveMember_id(userJson.getString("id"),this);
-                startActivity(new Intent(MainActivity.this,MainUser.class));
+                Intent intent = new Intent(MainActivity.this,MainUser.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
                 finish();
             }
             else{

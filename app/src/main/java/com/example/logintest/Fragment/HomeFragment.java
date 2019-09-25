@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.example.logintest.Activities.MainActivity;
 import com.example.logintest.Activities.MainUser;
 import com.example.logintest.GetSetClass.PreferenceUtils;
 import com.example.logintest.R;
@@ -22,7 +23,8 @@ public class HomeFragment extends Fragment {
 
         PreferenceUtils utils = new PreferenceUtils();
         if (utils.getUsername(getContext()) == null ){
-            Intent intent = new Intent(getContext(), MainUser.class);
+            Intent intent = new Intent(getContext(), MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
         }
 

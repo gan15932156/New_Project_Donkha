@@ -13,7 +13,8 @@ public class Statement {
 
     public Statement(){ }
 
-    public Statement(String account_detail_id, String action, String record_date, String record_time, Double trans_money) {
+    public Statement(String account_id,String account_detail_id, String action, String record_date, String record_time, Double trans_money) {
+        this.accoint_id = account_id;
         this.account_detail_id = account_detail_id;
         this.action = action;
         this.record_date = record_date;

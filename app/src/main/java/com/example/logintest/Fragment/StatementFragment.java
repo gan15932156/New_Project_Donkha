@@ -2,30 +2,28 @@ package com.example.logintest.Fragment;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.http.RequestQueue;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.logintest.Activities.MainActivity;
-import com.example.logintest.Activities.MainUser;
 import com.example.logintest.Database.WebSevConnect;
 import com.example.logintest.GetSetClass.PreferenceUtils;
 import com.example.logintest.GetSetClass.Statement;
+import com.example.logintest.Helper;
 import com.example.logintest.R;
-import com.example.logintest.StatementRecyclerAdapter;
+import com.example.logintest.Adapter.StatementRecyclerAdapter;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -42,7 +40,7 @@ public class StatementFragment extends Fragment {
     private StatementRecyclerAdapter mStatementAdapter;
     private ArrayList<Statement> mStatementList;
     private Context mContext;
-    private Button btn_empty;
+    private TextView txt_account_balance;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -50,10 +48,11 @@ public class StatementFragment extends Fragment {
         PreferenceUtils utils = new PreferenceUtils();
         View view = inflater.inflate(R.layout.fregment_statement, container, false);
         if (utils.getUsername(mContext) == null){
-            Intent intent = new Intent(mContext, MainUser.class);
+            Intent intent = new Intent(mContext, MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
         }
-        btn_empty = view.findViewById(R.id.btn_empty_recyclerview);
+        txt_account_balance = view.findViewById(R.id.txt_balance_money);
         spn = view.findViewById(R.id.spn_statement_recyclerview);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(mContext, R.array.spn_action_statement, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -65,34 +64,34 @@ public class StatementFragment extends Fragment {
         mStatementList = new ArrayList<>();
 
         request_statement();
-
+        setAccount_balance();
         spn.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String action = spn.getSelectedItem().toString();
-                Toast.makeText(mContext, action, Toast.LENGTH_SHORT).show();
-            }
+                if(!action.equals("เลือกรายการ")){
+                    mRecyclerView.setAdapter(null);
+                    mStatementList.clear();
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
+                    String action_request ;
+                    if(action.equals("ทั้งหมด")){ action_request = "all"; }
+                    else if(action.equals("ฝาก")){ action_request = "deposit"; }
+                    else if(action.equals("ถอน")){ action_request = "withdraw"; }
+                    else{ action_request = "tranfer"; }
+                    getShow_Filter(action_request);
+                }
             }
-        });
-        btn_empty.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                mRecyclerView.setAdapter(null);
-            }
+            public void onNothingSelected(AdapterView<?> parent) { }
         });
         return view;
     }
-
-    public void request_statement(){
-        String url = "http://18.140.49.199/Donkha/Service_app/get_statement";
+    public void getShow_Filter(String action){
+        String url = "http://18.140.49.199/Donkha/Service_app/get_filter_statement";
 
         List<NameValuePair> params = new ArrayList<NameValuePair>();
-        params.add(new BasicNameValuePair("member_id", PreferenceUtils.getMember_id(mContext)));
-
+        params.add(new BasicNameValuePair("account_id", PreferenceUtils.getAccount_id(mContext)));
+        params.add(new BasicNameValuePair("action", action));
         String response = WebSevConnect.getHttpPost(url,params,mContext);
         try {
             JSONObject obj = new JSONObject(response);
@@ -101,10 +100,9 @@ public class StatementFragment extends Fragment {
                 JSONArray jsonArraySt = obj.getJSONArray("statement");
                 for(int i = 0 ; i < jsonArraySt.length();i++){
                     JSONObject st = jsonArraySt.getJSONObject(i);
-                    Log.d("TAG",st.getString("trans_money"));
-
                     mStatementList.add(new Statement(
-                           st.getString("account_detail_id"),
+                            st.getString("account_id"),
+                            st.getString("account_detail_id"),
                             st.getString("action"),
                             st.getString("record_date"),
                             st.getString("record_time"),
@@ -119,6 +117,66 @@ public class StatementFragment extends Fragment {
             }
         }
         catch (JSONException e) {
-            Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_LONG).show(); }
+            Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_LONG).show();
+        }
     }
+    public void setAccount_balance(){
+        String url = "http://18.140.49.199/Donkha/Service_app/get_account_balance";
+
+        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        params.add(new BasicNameValuePair("member_id", PreferenceUtils.getMember_id(mContext)));
+
+        String response = WebSevConnect.getHttpPost(url,params,mContext);
+        try {
+            JSONObject obj = new JSONObject(response);
+            if(!obj.getBoolean("error")){
+
+                JSONObject jsonAccount = obj.getJSONObject("account_balance");
+                PreferenceUtils.saveAccount_id(jsonAccount.getString("account_id"),mContext);
+                txt_account_balance.setText("ยอดเงินคงเหลือ "+Helper.customFormat("###,###.###",jsonAccount.getDouble("balance"))+" บาท");
+            }
+            else{
+                Toast.makeText(mContext, obj.getString("message"), Toast.LENGTH_SHORT).show();
+            }
+        }
+        catch (JSONException e) {
+            Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_LONG).show();
+        }
+    }
+    public void request_statement(){
+        String url = "http://18.140.49.199/Donkha/Service_app/get_statement";
+
+        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        params.add(new BasicNameValuePair("member_id", PreferenceUtils.getMember_id(mContext)));
+
+        String response = WebSevConnect.getHttpPost(url,params,mContext);
+        try {
+            JSONObject obj = new JSONObject(response);
+            if(!obj.getBoolean("error")){
+
+                JSONArray jsonArraySt = obj.getJSONArray("statement");
+                for(int i = 0 ; i < jsonArraySt.length();i++){
+                    JSONObject st = jsonArraySt.getJSONObject(i);
+                    mStatementList.add(new Statement(
+                            st.getString("account_id"),
+                            st.getString("account_detail_id"),
+                            st.getString("action"),
+                            st.getString("record_date"),
+                            st.getString("record_time"),
+                            st.getDouble("trans_money")
+                    ));
+                }
+                mStatementAdapter = new StatementRecyclerAdapter(mContext,mStatementList);
+                mRecyclerView.setAdapter(mStatementAdapter);
+            }
+            else{
+                Toast.makeText(mContext, obj.getString("message"), Toast.LENGTH_SHORT).show();
+            }
+        }
+        catch (JSONException e) {
+            Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_LONG).show();
+        }
+    }
+
+
 }

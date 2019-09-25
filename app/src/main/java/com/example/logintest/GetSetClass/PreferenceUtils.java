@@ -16,7 +16,6 @@ public class PreferenceUtils {
         prefsEditor.apply();
         return true;
     }
-
     public static String getUsername(Context context) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         return prefs.getString(Constants.KEY_USERNAME, null);
@@ -46,5 +45,18 @@ public class PreferenceUtils {
     public static String getMember_id(Context context) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         return prefs.getString(Constants.KEY_MEMBER_ID, null);
+    }
+
+    public static boolean saveAccount_id(String account_id, Context context) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor prefsEditor = prefs.edit();
+        prefsEditor.putString(Constants.KEY_ACCOUNT_ID, account_id);
+        prefsEditor.apply();
+        return true;
+    }
+
+    public static String getAccount_id(Context context) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        return prefs.getString(Constants.KEY_ACCOUNT_ID, null);
     }
 }
