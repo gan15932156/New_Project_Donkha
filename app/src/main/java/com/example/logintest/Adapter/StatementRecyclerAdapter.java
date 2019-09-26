@@ -18,7 +18,11 @@ import com.example.logintest.GetSetClass.Statement;
 import com.example.logintest.Helper;
 import com.example.logintest.R;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
+
+import static com.example.logintest.R.layout.dialog_show_statement;
 
 public class StatementRecyclerAdapter extends RecyclerView.Adapter<StatementRecyclerAdapter.StatementViewHoler> {
     private Context mContext;
@@ -38,13 +42,13 @@ public class StatementRecyclerAdapter extends RecyclerView.Adapter<StatementRecy
 
     @SuppressLint("ResourceAsColor")
     @Override
-    public void onBindViewHolder(@NonNull StatementViewHoler statementViewHoler, int i) {
+    public void onBindViewHolder(@NonNull StatementViewHoler statementViewHoler, final int i) {
         final Statement st = mStatementArrayList.get(i);
 
-        String action ;
-        String date = st.getRecord_date();
-        String time = st.getRecord_time();
-        String money;
+        final String action ;
+        final String date = st.getRecord_date();
+        final String time = st.getRecord_time();
+        final String money;
         if(st.getAction().equals("deposit")){
             action = "ฝาก";
             money = Helper.customFormat("++###,###.###",st.getTrans_money());
@@ -67,22 +71,20 @@ public class StatementRecyclerAdapter extends RecyclerView.Adapter<StatementRecy
         statementViewHoler.linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Toast.makeText(mContext, st.getAccoint_id()+" "+st.getAccount_detail_id(), Toast.LENGTH_SHORT).show();
-                AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-                builder.setCancelable(false);
-                builder.setMessage(st.getAccoint_id()+" "+st.getAccount_detail_id());
-                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        // Do something
-                    }
-                });
-                builder.setNegativeButton("Cancle", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        // Do something
-                    }
-                });
-                AlertDialog dialog = builder.create();
-                dialog.show();
+               AlertDialog.Builder mBuilder = new AlertDialog.Builder(v.getContext());
+               LayoutInflater layoutInflater = LayoutInflater.from(v.getContext());
+               final View view = layoutInflater.inflate(dialog_show_statement,null);
+               final TextView txt_action = view.findViewById(R.id.dialog_txt_statement_action);
+               final TextView txt_money = view.findViewById(R.id.dialog_txt_statement_monry);
+               final TextView txt_date = view.findViewById(R.id.dialog_txt_statement_date);
+               final TextView txt_id = view.findViewById(R.id.dialog_txt_statement_id);
+               txt_action.setText(action);
+               txt_money.setText(Helper.customFormat("###,###.###",st.getTrans_money())+" บาท");
+               txt_date.setText(Helper.dateThai(date)+" เวลา "+time);
+               txt_id.setText(st.getTrans_id());
+
+               mBuilder.setView(view);
+               mBuilder.show();
             }
         });
 

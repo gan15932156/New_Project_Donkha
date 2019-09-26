@@ -102,10 +102,13 @@ public class StatementFragment extends Fragment {
                     JSONObject st = jsonArraySt.getJSONObject(i);
                     mStatementList.add(new Statement(
                             st.getString("account_id"),
-                            st.getString("account_detail_id"),
+                            st.getString("trans_id"),
+                            st.getString("account_id"),
+                            st.getString("staff_record_id"),
                             st.getString("action"),
                             st.getString("record_date"),
                             st.getString("record_time"),
+                            st.getDouble("account_detail_balance"),
                             st.getDouble("trans_money")
                     ));
                 }
@@ -159,10 +162,13 @@ public class StatementFragment extends Fragment {
                     JSONObject st = jsonArraySt.getJSONObject(i);
                     mStatementList.add(new Statement(
                             st.getString("account_id"),
-                            st.getString("account_detail_id"),
+                            st.getString("trans_id"),
+                            st.getString("account_id"),
+                            st.getString("staff_record_id"),
                             st.getString("action"),
                             st.getString("record_date"),
                             st.getString("record_time"),
+                            st.getDouble("account_detail_balance"),
                             st.getDouble("trans_money")
                     ));
                 }
