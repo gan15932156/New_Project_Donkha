@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -77,7 +78,7 @@ public class StatementFragment extends Fragment {
                     if(action.equals("ทั้งหมด")){ action_request = "all"; }
                     else if(action.equals("ฝาก")){ action_request = "deposit"; }
                     else if(action.equals("ถอน")){ action_request = "withdraw"; }
-                    else{ action_request = "tranfer"; }
+                    else{ action_request = "tranfer_money"; }
                     getShow_Filter(action_request);
                 }
             }

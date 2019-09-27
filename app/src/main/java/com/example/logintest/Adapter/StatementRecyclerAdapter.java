@@ -53,10 +53,31 @@ public class StatementRecyclerAdapter extends RecyclerView.Adapter<StatementRecy
             action = "ฝาก";
             money = Helper.customFormat("++###,###.###",st.getTrans_money());
             statementViewHoler.txt_money.setTextColor(Color.parseColor("#00b806"));
-        }else if(st.getAction().equals("withdraw")){
+        }
+        else if(st.getAction().equals("withdraw")){
             action = "ถอน";
             money = Helper.customFormat("--###,###.###",st.getTrans_money());
             statementViewHoler.txt_money.setTextColor(Color.RED);
+        }
+        else if(st.getAction().equals("tranfer_money")){
+            action = "โอน";
+            money = Helper.customFormat("--###,###.###",st.getTrans_money());
+            statementViewHoler.txt_money.setTextColor(Color.RED);
+        }
+        else if(st.getAction().equals("recive_money")){
+            action = "รับเงินโอน";
+            money = Helper.customFormat("++###,###.###",st.getTrans_money());
+            statementViewHoler.txt_money.setTextColor(Color.parseColor("#00b806"));
+        }
+        else if(st.getAction().equals("open_account")){
+            action = "เปิดบัญชี";
+            money = Helper.customFormat("++###,###.###",st.getTrans_money());
+            statementViewHoler.txt_money.setTextColor(Color.parseColor("#00b806"));
+        }
+        else if(st.getAction().equals("add_interest")){
+            action = "เพิ่มดอกเบี้ย";
+            money = Helper.customFormat("++###,###.###",st.getTrans_money());
+            statementViewHoler.txt_money.setTextColor(Color.parseColor("#00b806"));
         }
         else{
             action = "โอน";
