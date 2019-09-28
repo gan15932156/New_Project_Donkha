@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
         PreferenceUtils utils = new PreferenceUtils();
         if (utils.getUsername(this) != null ){
             Intent intent = new Intent(this,MainUser.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_TASK_ON_HOME);
+            finishAffinity();
             startActivity(intent);
             this.finish();
         }

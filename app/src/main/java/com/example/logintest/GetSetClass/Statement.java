@@ -10,6 +10,7 @@ public class Statement {
     private String record_time;
     private Double account_detail_balance;
     private Double trans_money;
+    private String account_tranfer;
 
     public Statement(){ }
 
@@ -30,7 +31,8 @@ public class Statement {
             String record_date,
             String record_time,
             Double account_detail_balance,
-            Double trans_money)
+            Double trans_money,
+            String account_tranfer)
     {
         this.account_detail_id = account_detail_id;
         this.trans_id = trans_id;
@@ -41,6 +43,8 @@ public class Statement {
         this.record_time = record_time;
         this.account_detail_balance = account_detail_balance;
         this.trans_money = trans_money;
+        this.account_tranfer = account_tranfer;
+
     }
 
     public String getAccount_detail_id() { return account_detail_id; }
@@ -61,4 +65,12 @@ public class Statement {
     public void setAccount_detail_balance(Double account_detail_balance) { this.account_detail_balance = account_detail_balance; }
     public Double getTrans_money() { return trans_money; }
     public void setTrans_money(Double trans_money) { this.trans_money = trans_money; }
+
+    public String getAccount_tranfer() {
+        return account_tranfer;
+    }
+
+    public void setAccount_tranfer(String account_tranfer) {
+        this.account_tranfer = account_tranfer;
+    }
 }

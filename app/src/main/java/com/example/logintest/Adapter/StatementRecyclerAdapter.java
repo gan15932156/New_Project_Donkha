@@ -3,7 +3,6 @@ package com.example.logintest.Adapter;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -12,13 +11,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.logintest.GetSetClass.Statement;
 import com.example.logintest.Helper;
 import com.example.logintest.R;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -45,7 +41,7 @@ public class StatementRecyclerAdapter extends RecyclerView.Adapter<StatementRecy
     public void onBindViewHolder(@NonNull StatementViewHoler statementViewHoler, final int i) {
         final Statement st = mStatementArrayList.get(i);
 
-        final String action ;
+        String action ;
         final String date = st.getRecord_date();
         final String time = st.getRecord_time();
         final String money;
@@ -99,7 +95,15 @@ public class StatementRecyclerAdapter extends RecyclerView.Adapter<StatementRecy
                final TextView txt_money = view.findViewById(R.id.dialog_txt_statement_monry);
                final TextView txt_date = view.findViewById(R.id.dialog_txt_statement_date);
                final TextView txt_id = view.findViewById(R.id.dialog_txt_statement_id);
-               txt_action.setText(action);
+               String acccc ;
+               if(st.getAction().equals("deposit")){ acccc = "ฝาก"; }
+               else if(st.getAction().equals("withdraw")){ acccc = "ถอน"; }
+               else if(st.getAction().equals("tranfer_money")){ acccc = "โอนให้บัญชี "+st.getAccount_tranfer(); }
+               else if(st.getAction().equals("recive_money")){ acccc = "รับเงินโอนจากบัญชี "+st.getAccount_tranfer(); }
+               else if(st.getAction().equals("open_account")){ acccc = "เปิดบัญชี"; }
+               else if(st.getAction().equals("add_interest")){ acccc = "เพิ่มดอกเบี้ย"; }
+               else{ acccc = "โอน"; }
+               txt_action.setText(acccc);
                txt_money.setText(Helper.customFormat("###,###.###",st.getTrans_money())+" บาท");
                txt_date.setText(Helper.dateThai(date)+" เวลา "+time);
                txt_id.setText(st.getTrans_id());

@@ -110,7 +110,8 @@ public class StatementFragment extends Fragment {
                             st.getString("record_date"),
                             st.getString("record_time"),
                             st.getDouble("account_detail_balance"),
-                            st.getDouble("trans_money")
+                            st.getDouble("trans_money"),
+                            st.getString("account_id_tranfer")
                     ));
                 }
                 mStatementAdapter = new StatementRecyclerAdapter(mContext,mStatementList);
@@ -156,6 +157,7 @@ public class StatementFragment extends Fragment {
         String response = WebSevConnect.getHttpPost(url,params,mContext);
         try {
             JSONObject obj = new JSONObject(response);
+            Log.d("TAG",obj+"");
             if(!obj.getBoolean("error")){
 
                 JSONArray jsonArraySt = obj.getJSONArray("statement");
@@ -170,7 +172,8 @@ public class StatementFragment extends Fragment {
                             st.getString("record_date"),
                             st.getString("record_time"),
                             st.getDouble("account_detail_balance"),
-                            st.getDouble("trans_money")
+                            st.getDouble("trans_money"),
+                            st.getString("account_id_tranfer")
                     ));
                 }
                 mStatementAdapter = new StatementRecyclerAdapter(mContext,mStatementList);
