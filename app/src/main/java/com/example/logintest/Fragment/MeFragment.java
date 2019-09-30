@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.logintest.Activities.MainActivity;
 import com.example.logintest.Database.WebSevConnect;
 import com.example.logintest.GetSetClass.Member;
@@ -112,10 +113,15 @@ public class MeFragment extends Fragment {
                         jsonMember.getString("PROVINCE_NAME"),
                         jsonMember.getString("job_name")
                 );
-                String edu = ((member.getEdu_id() == "0") ? "ไม่มี" : "ม."+member.getEdu_id());
+                String edu = ((member.getEdu_id().equals("0")) ? "ไม่มี" : "ม."+member.getEdu_id());
+                String std_code = ((member.getStd_code().equals("0")) ? "ไม่มี" : member.getStd_code());
+                Glide.with(mContext)
+                        .load(member.getMember_pic())
+                        .fitCenter()
+                        .into(img_profile);
                 txt_name.setText(member.getMember_title()+""+member.getMember_name());
                 txt_id_card.setText(member.getMember_id_card());
-                txt_stu_code.setText(member.getStd_code());
+                txt_stu_code.setText(std_code);
                 txt_edu_level.setText(edu);
                 txt_job.setText(member.getJob_name());
                 txt_birth_date.setText(Helper.dateThai(member.getMember_birth_date()));
