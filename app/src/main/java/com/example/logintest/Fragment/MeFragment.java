@@ -61,11 +61,6 @@ public class MeFragment extends Fragment {
             }
         });
         get_member_detail(PreferenceUtils.getMember_id(mContext));
-
-
-
-
-
         return view;
     }
     private void initView(View view){

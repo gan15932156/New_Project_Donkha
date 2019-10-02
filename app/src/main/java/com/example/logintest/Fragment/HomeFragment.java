@@ -28,7 +28,6 @@ public class HomeFragment extends Fragment {
             startActivity(intent);
         }
 
-        Toast.makeText(getContext(), "Homeeeee", Toast.LENGTH_SHORT).show();
         return view;
     }
 }
