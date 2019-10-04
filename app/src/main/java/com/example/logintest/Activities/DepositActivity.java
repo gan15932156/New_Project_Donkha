@@ -50,32 +50,33 @@ public class DepositActivity extends AppCompatActivity {
         btn_submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!txt_deposit_money.getText().toString().isEmpty()){
+                if(!txt_deposit_money.getText().toString().isEmpty() &&
+                        !txt_ac_balance.getText().toString().isEmpty() &&
+                        !txt_ac_code.getText().toString().isEmpty() &&
+                        !txt_ac_name.getText().toString().isEmpty()){
+                    //Toast.makeText(DepositActivity.this, PreferenceUtils.getAccount_id(DepositActivity.this), Toast.LENGTH_SHORT).show();
                     insert_deposit();
                 }
                 else{
-                    Toast.makeText(DepositActivity.this, "กรุณากรอกจำนวนเงินที่ฝาก", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(DepositActivity.this, "ไม่สามารถทำรายการได้", Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
         txt_deposit_money.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
+            public void onTextChanged(CharSequence s, int start, int before, int count) { }
             @Override
-            public void afterTextChanged(Editable s) {+
+            public void afterTextChanged(Editable s) {
                 if(!s.toString().isEmpty()){
-                    deposit_money = Double.parseDouble(s.toString());
-                    total_money = deposit_money + ac_balance;
-                    txt_total_money.setText(total_money.toString());
+                    if(!ac_balance.equals(0.0)){
+                        deposit_money = Double.parseDouble(s.toString());
+                        total_money = deposit_money + ac_balance;
+                        txt_total_money.setText(total_money.toString());
+                    }
+
                 }
                 else{
                     txt_total_money.setText(null);
@@ -94,7 +95,28 @@ public class DepositActivity extends AppCompatActivity {
         txt_total_money = (TextInputEditText) findViewById(R.id.deposit_edit_total_money);
     }
     private void insert_deposit(){
+        String url = "http://18.140.49.199/Donkha/Service_app/receive_deposit_insert";
 
+        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        params.add(new BasicNameValuePair("account_id",PreferenceUtils.getAccount_id(DepositActivity.this)));
+        params.add(new BasicNameValuePair("deposit_money",txt_deposit_money.getText().toString().trim()));
+        params.add(new BasicNameValuePair("new_balance",txt_total_money.getText().toString().trim()));
+
+        String response = WebSevConnect.getHttpPost(url,params,DepositActivity.this);
+        try {
+            JSONObject obj = new JSONObject(response);
+            if(!obj.getBoolean("error")){
+                Toast.makeText(DepositActivity.this, obj.getString("message"), Toast.LENGTH_LONG).show();
+                this.finishAffinity();
+                startActivity(new Intent(DepositActivity.this,MainUser.class));
+            }
+            else{
+                Toast.makeText(DepositActivity.this, obj.getString("message"), Toast.LENGTH_SHORT).show();
+            }
+        }
+        catch (JSONException e) {
+            Toast.makeText(DepositActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+        }
     }
     public boolean onCreateOptionsMenu(Menu menu){
         getMenuInflater().inflate(R.menu.home,menu);
@@ -110,34 +132,41 @@ public class DepositActivity extends AppCompatActivity {
         return  super.onOptionsItemSelected(item);
     }
     private void get_account(){
-        String url = "http://18.140.49.199/Donkha/Service_app/select_account";
 
-        List<NameValuePair> params = new ArrayList<NameValuePair>();
-        params.add(new BasicNameValuePair("account_id",PreferenceUtils.getAccount_id(DepositActivity.this)));
+        if(PreferenceUtils.getAccount_id(DepositActivity.this) == null){
+            Toast.makeText(this, "ไม่พบบัญชี ไม่สามารถทำรายการได้", Toast.LENGTH_LONG).show();
+        }
+        else{
+            String url = "http://18.140.49.199/Donkha/Service_app/select_account";
 
-        String response = WebSevConnect.getHttpPost(url,params,DepositActivity.this);
-        try {
-            JSONObject obj = new JSONObject(response);
-            if(!obj.getBoolean("error")){
+            List<NameValuePair> params = new ArrayList<NameValuePair>();
+            params.add(new BasicNameValuePair("account_id",PreferenceUtils.getAccount_id(DepositActivity.this)));
 
-                JSONObject jsonAccount = obj.getJSONObject("account");
-                ac_balance = jsonAccount.getDouble("account_balance");
+            String response = WebSevConnect.getHttpPost(url,params,DepositActivity.this);
+            try {
+                JSONObject obj = new JSONObject(response);
+                if(!obj.getBoolean("error")){
 
-                txt_ac_balance.setText(Helper.customFormat("###,###.###",jsonAccount.getDouble("account_balance")));
-                txt_ac_code.setText(jsonAccount.getString("account_id"));
-                txt_ac_name.setText(jsonAccount.getString("account_name"));
-                Glide.with(DepositActivity.this)
-                        .load(jsonAccount.getString("member_signa_pic"))
-                        .fitCenter()
-                        .into(img_singature);
+                    JSONObject jsonAccount = obj.getJSONObject("account");
+                    PreferenceUtils.saveAccount_id(jsonAccount.getString("account_id"),DepositActivity.this);
+                    ac_balance = jsonAccount.getDouble("account_balance");
+                    txt_ac_balance.setText(Helper.customFormat("###,###.###",jsonAccount.getDouble("account_balance")));
+                    txt_ac_code.setText(jsonAccount.getString("account_id"));
+                    txt_ac_name.setText(jsonAccount.getString("account_name"));
+                    Glide.with(DepositActivity.this)
+                            .load(jsonAccount.getString("member_signa_pic"))
+                            .fitCenter()
+                            .into(img_singature);
+                }
+                else{
+                    Toast.makeText(DepositActivity.this, obj.getString("message"), Toast.LENGTH_SHORT).show();
+                }
             }
-            else{
-                Toast.makeText(DepositActivity.this, obj.getString("message"), Toast.LENGTH_SHORT).show();
+            catch (JSONException e) {
+                Toast.makeText(DepositActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
             }
         }
-        catch (JSONException e) {
-            Toast.makeText(DepositActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
-        }
+
     }
 
 }
