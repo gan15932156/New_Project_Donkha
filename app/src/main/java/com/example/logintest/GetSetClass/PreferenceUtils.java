@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-import com.example.logintest.Constants;
+import com.example.logintest.Helper.Constants;
 
 public class PreferenceUtils {
     public PreferenceUtils(){ }

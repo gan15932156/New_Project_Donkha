@@ -13,7 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.logintest.GetSetClass.Statement;
-import com.example.logintest.Helper;
+import com.example.logintest.Helper.Helper;
 import com.example.logintest.R;
 
 import java.util.ArrayList;

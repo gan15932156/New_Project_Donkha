@@ -14,10 +14,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.work.Data;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
+
 import com.bumptech.glide.Glide;
 import com.example.logintest.Database.WebSevConnect;
 import com.example.logintest.GetSetClass.PreferenceUtils;
-import com.example.logintest.Helper;
+import com.example.logintest.Helper.Constants;
+import com.example.logintest.Helper.Helper;
+import com.example.logintest.Helper.MyWork;
 import com.example.logintest.R;
 
 import org.apache.http.NameValuePair;
@@ -27,6 +33,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class DepositActivity extends AppCompatActivity {
     private Button btn_submit;
@@ -54,8 +61,8 @@ public class DepositActivity extends AppCompatActivity {
                         !txt_ac_balance.getText().toString().isEmpty() &&
                         !txt_ac_code.getText().toString().isEmpty() &&
                         !txt_ac_name.getText().toString().isEmpty()){
-                    //Toast.makeText(DepositActivity.this, PreferenceUtils.getAccount_id(DepositActivity.this), Toast.LENGTH_SHORT).show();
                     insert_deposit();
+                    //Toast.makeText(DepositActivity.this, PreferenceUtils.getAccount_id(DepositActivity.this)+" "+txt_deposit_money.getText()+" "+txt_total_money.getText(), Toast.LENGTH_SHORT).show();
                 }
                 else{
                     Toast.makeText(DepositActivity.this, "ไม่สามารถทำรายการได้", Toast.LENGTH_SHORT).show();
@@ -107,6 +114,17 @@ public class DepositActivity extends AppCompatActivity {
             JSONObject obj = new JSONObject(response);
             if(!obj.getBoolean("error")){
                 Toast.makeText(DepositActivity.this, obj.getString("message"), Toast.LENGTH_LONG).show();
+
+                Data data = new Data.Builder()
+                        .putString(Constants.KEY_SERVICE_ACCOUNT_ID, PreferenceUtils.getAccount_id(DepositActivity.this))
+                        .build();
+
+                final OneTimeWorkRequest check = new OneTimeWorkRequest.Builder(MyWork.class).
+                        setInitialDelay(2, TimeUnit.SECONDS).
+                        setInputData(data).
+                        addTag("check").build();
+                WorkManager.getInstance().enqueue(check);
+
                 this.finishAffinity();
                 startActivity(new Intent(DepositActivity.this,MainUser.class));
             }

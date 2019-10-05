@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
-import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,7 +19,7 @@ import com.example.logintest.Activities.MainActivity;
 import com.example.logintest.Database.WebSevConnect;
 import com.example.logintest.GetSetClass.Member;
 import com.example.logintest.GetSetClass.PreferenceUtils;
-import com.example.logintest.Helper;
+import com.example.logintest.Helper.Helper;
 import com.example.logintest.R;
 
 import org.apache.http.NameValuePair;
